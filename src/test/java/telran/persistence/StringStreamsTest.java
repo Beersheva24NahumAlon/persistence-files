@@ -12,9 +12,9 @@ import org.junit.jupiter.api.*;
 public class StringStreamsTest {
     private static final String PRINT_STREAM_FILE = "printStreamFile.txt";
     private static final String PRINT_WRITER_FILE = "printWriterFile.txt";
-    private static final String SHIFT = "   ";
-
+    
     public class MyFileVisitor extends SimpleFileVisitor<Path> {
+        private static final String SHIFT = "   ";
         Path root;
 
         public MyFileVisitor(Path root) {
