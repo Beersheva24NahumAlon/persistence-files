@@ -15,7 +15,7 @@ public class StringStreamsTest {
     
     public class MyFileVisitor extends SimpleFileVisitor<Path> {
         private static final String SHIFT = "   ";
-        Path root;
+        private Path root;
 
         public MyFileVisitor(Path root) {
             this.root = root;
