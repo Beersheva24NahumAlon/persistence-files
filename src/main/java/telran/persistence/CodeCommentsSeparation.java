@@ -1,19 +1,13 @@
 package telran.persistence;
 //Test comment
 import java.io.*;
+import java.nio.file.*;
 
 public class CodeCommentsSeparation {
-
-    //Record contains streams wich using in the application
-    record Streams(BufferedReader reader, PrintWriter writerCode, PrintWriter writerCommnets) {
-    }
-
     //Main method of application
     public static void main(String[] args) throws Exception {
         try {
-            Streams streams = openStreams(args);
-            workWithStreams(streams);
-            closeStreams(streams);
+            separateCodeAndComments(args);
         } catch (RuntimeException e) {
             e.printStackTrace();    
         } catch (Exception e) {
@@ -21,36 +15,24 @@ public class CodeCommentsSeparation {
         }
     }
 
-    //Method is closing opened streams
-    private static void closeStreams(Streams streams) throws Exception {
-        streams.reader.close();
-        streams.writerCode.close();
-        streams.writerCommnets.close();
+    private static void separateCodeAndComments(String[] args) throws Exception {
+        checkParametrs(args);
+        BufferedReader reader = new BufferedReader(new FileReader(args[0])); 
+        PrintWriter writerCode = new PrintWriter(args[1]);
+        PrintWriter writerCommnets = new PrintWriter(args[2]);
+        reader.lines().forEach(l -> (l.trim().startsWith("//") ? writerCommnets : writerCode).println(l));
+        reader.close();
+        writerCode.close();
+        writerCommnets.close();
+
     }
 
-    //Method is parsing arguments nad opening streams for reading and writing files
-    private static Streams openStreams(String[] args) throws Exception {
+    private static void checkParametrs(String[] args) throws Exception {
         if (args.length != 3 ) {
             throw new Exception("Must be 3 parametrs!");
         }
-        return new Streams(
-                new BufferedReader(new FileReader(args[0])), 
-                new PrintWriter(args[1]),
-                new PrintWriter(args[2])
-        );
-    }
-
-    //Method for separating code and comments
-    private static void workWithStreams(Streams streams) throws Exception {
-        String currentLine = "";
-        while (streams.reader.ready()) {
-            currentLine = streams.reader.readLine();
-            if (currentLine.trim().length() >= 2 
-                    && currentLine.trim().substring(0, 2).equals("//")) {
-                streams.writerCommnets.println(currentLine);
-            } else {
-                streams.writerCode.println(currentLine);
-            }
+        if (!Files.exists(Path.of(args[0]))) {
+            throw new Exception("Source file is not exist!");
         }
     }
 }

@@ -1,6 +1,2 @@
 //Test comment
-    //Record contains streams wich using in the application
     //Main method of application
-    //Method is closing opened streams
-    //Method is parsing arguments nad opening streams for reading and writing files
-    //Method for separating code and comments

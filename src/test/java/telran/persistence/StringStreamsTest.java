@@ -40,7 +40,7 @@ public class StringStreamsTest {
     
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) { 
-            dysplayPath(file, " - can't access to path (input/output error)");     
+            dysplayPath(file, " (" + exc.getClass().getSimpleName() + ")");     
             return FileVisitResult.CONTINUE;
         }
     }
@@ -75,7 +75,11 @@ public class StringStreamsTest {
     }
 
     private void printDirectoryContent(String pathString, int depth) throws IOException{
+        
         Path path = Path.of(pathString);
+        if (!Files.isDirectory(path)) {
+            throw new IllegalArgumentException("It's not directory");
+        }
         Files.walkFileTree(path, EnumSet.of(FileVisitOption.FOLLOW_LINKS), depth, new MyFileVisitor(path));
     } 
 }
